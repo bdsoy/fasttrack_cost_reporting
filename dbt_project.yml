@@ -1,0 +1,30 @@
+name: fasttrack_cost_reporting
+version: "0.0.1"
+
+config-version: 2
+profile: default
+
+# analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+model-paths: ["models"]
+# snapshot-paths: ["snapshots"]
+# seed-paths: ["seeds"]
+test-paths: ["tests"]
+
+clean-targets: # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+# dispatch:
+#   - macro_namespace: dbt
+#     search_order:
+#       - fasttrack_cost_reporting
+#       - dbt_snowflake_monitoring
+#       - dbt
+
+models:
+  fasttrack_cost_reporting:
+    +enabled: false
+
+  dbt_snowflake_monitoring:
+    +enabled: false
