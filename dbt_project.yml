@@ -1,26 +1,23 @@
 name: "fasttrack_cost_reporting"
-version: "1.0.3"
+version: "1.1.0"
 
 require-dbt-version: [">=1.8.0", "<2.0.0"]
 
-profile: fasttrack_cost_reporting # must exist within $HOME/.dbt/profiles.yml
+profile: "fasttrack_cost_reporting" # must exist within $HOME/.dbt/profiles.yml
 
 macro-paths: ["macros"]
 model-paths: ["models"]
 test-paths: ["tests"]
 
 target-path: "target"
-clean-targets:
-  - dbt_packages
-  - logs
-  - target
+clean-targets: ["dbt_packages", "logs", "target"]
 
 dispatch:
-  - macro_namespace: dbt
-    search_order:
-      - fasttrack_cost_reporting
-      - dbt_snowflake_monitoring
-      - dbt
+  - macro_namespace: "dbt"
+    search_order: 
+      - "fasttrack_cost_reporting"
+      - "dbt_snowflake_monitoring"
+      - "dbt"
 
 query-comment:
   comment: "{{ dbt_snowflake_monitoring.get_query_comment(node) }}"
@@ -31,106 +28,85 @@ sources:
     staging:
       snowflake_account_usage:
         access_history:
-          +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+          +tags: ["extras_dbt_snowflake_monitoring"]
         query_history:
-          +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+          +tags: ["extras_dbt_snowflake_monitoring"]
         warehouse_events_history:
-          +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+          +tags: ["extras_dbt_snowflake_monitoring"]
         warehouse_metering_history:
-          +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+          +tags: ["extras_dbt_snowflake_monitoring"]
 
 tests:
-  +tags:
-    - fasttrack_cost_reporting
-    - tests_cost_reporting
-  +docs:
-    node_color: "#696969"
+  +tags: ["fasttrack_cost_reporting", "tests_cost_reporting"]
+  +docs: { node_color: "#696969" }
 
 models:
-  +persist_docs:
-    columns: true
-    relation: true
-  +tags:
-    - fasttrack_cost_reporting
+  +persist_docs: { columns: true, relation: true }
+  +tags: ["fasttrack_cost_reporting"]
 
   dbt_snowflake_monitoring:
-    +schema: "{{ var('fasttrack_cost_reporting_snowflake_landing_schema', 'landing_snowflake_monitoring') }}"
-    +docs:
-      node_color: "#1E90FF"
-    +tags:
-      - dbt_snowflake_monitoring
+    +schema: "landing_snowflake_monitoring" # users can override this default schema name on their own dbt_project.yml
+    +docs: { node_color: "#1E90FF" }
+    +tags: ["dbt_snowflake_monitoring"]
 
     cost_per_query:
-      +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+      +tags: ["extras_dbt_snowflake_monitoring"]
     dbt_queries:
-      +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+      +tags: ["extras_dbt_snowflake_monitoring"]
     query_base_object_access:
-      +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+      +tags: ["extras_dbt_snowflake_monitoring"]
     query_base_table_access:
-      +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+      +tags: ["extras_dbt_snowflake_monitoring"]
     query_direct_object_access:
-      +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+      +tags: ["extras_dbt_snowflake_monitoring"]
     query_direct_table_access:
-      +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+      +tags: ["extras_dbt_snowflake_monitoring"]
     query_history_enriched:
-      +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+      +tags: ["extras_dbt_snowflake_monitoring"]
     warehouse_credits_map:
-      +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+      +tags: ["extras_dbt_snowflake_monitoring"]
     warehouses_type2_dimension:
-      +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+      +tags: ["extras_dbt_snowflake_monitoring"]
 
     staging:
       stg_access_history:
-        +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+        +tags: ["extras_dbt_snowflake_monitoring"]
       stg_query_history:
-        +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+        +tags: ["extras_dbt_snowflake_monitoring"]
       stg_warehouse_metering_history:
-        +enabled: "{{ var('fasttrack_cost_reporting_enable_extras', false) }}"
+        +tags: ["extras_dbt_snowflake_monitoring"]
 
   fasttrack_cost_reporting:
-    +materialized: view
+    +materialized: "view"
 
     staging:
-      +schema: "{{ var('fasttrack_cost_reporting_staging_schema', 'transform_cost_reporting') }}"
-      +docs:
-        node_color: "#663399"
-      +tags:
-        - staging_cost_reporting
-        - transform_cost_reporting
+      +schema: "transform_cost_reporting" # users can override this default schema name on their own dbt_project.yml
+      +docs: { node_color: "#663399" }
+      +tags: ["staging_cost_reporting", "transform_cost_reporting"]
 
     transform:
-      +schema: "{{ var('fasttrack_cost_reporting_transform_schema', 'transform_cost_reporting') }}"
-      +docs:
-        node_color: "#FF4500"
-      +tags:
-        - transform_cost_reporting
+      +schema: "transform_cost_reporting" # users can override this default schema name on their own dbt_project.yml
+      +docs: { node_color: "#FF4500" }
+      +tags: ["transform_cost_reporting"]
 
       final:
-        +materialized: table
+        +materialized: "table"
 
     publish:
-      +schema: "{{ var('fasttrack_cost_reporting_publish_schema', 'publish_cost_reporting') }}"
-      +docs:
-        node_color: "#DC143C"
-      +tags:
-        - publish_cost_reporting
+      +schema: "publish_cost_reporting" # users can override this default schema name on their own dbt_project.yml
+      +docs: { node_color: "#DC143C" }
+      +tags: ["publish_cost_reporting"]
       +post-hook:
-        - grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ get_cost_reporting_target_env() }}
-        - grant select on {{ this }} to role reporter_ft_{{ get_cost_reporting_target_env() }}
+        - "grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ get_cost_reporting_target_env() }}"
+        - "grant select on {{ this }} to role reporter_ft_{{ get_cost_reporting_target_env() }}"
 
 vars:
   dbt_cloud_account_id: 5235 # only needed for extras
   dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/" # only needed for extras, varies according to dbt cloud region
   dbt_constraints_enabled: true
-  dbt_constraints_sources_enabled: false # bypassed by default due to LOADER privileges required
   fasttrack_cost_reporting_azure_landing_schema: "landing_azure_cost_data_export"
   fasttrack_cost_reporting_azure_tags_key: "ProjectName"
   fasttrack_cost_reporting_azure_tags_value: "Fast Track Development"
   fasttrack_cost_reporting_db: "fasttrack_cost_reporting"
-  fasttrack_cost_reporting_enable_extras: false
-  fasttrack_cost_reporting_publish_schema: "publish_cost_reporting"
   fasttrack_cost_reporting_reference_schema: "reference_cost_reporting"
   fasttrack_cost_reporting_reference_additional_costs_table: "fasttrack_additional_platform_costs"
-  fasttrack_cost_reporting_snowflake_landing_schema: "landing_snowflake_monitoring"
-  fasttrack_cost_reporting_staging_schema: "transform_cost_reporting"
-  fasttrack_cost_reporting_transform_schema: "transform_cost_reporting"
