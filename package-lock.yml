@@ -1,10 +1,10 @@
 packages:
   - package: get-select/dbt_snowflake_monitoring
-    version: 5.3.1
+    version: 5.4.2
   - package: Snowflake-Labs/dbt_constraints
     version: 1.0.4
   - package: dbt-labs/dbt_utils
     version: 1.3.0
   - package: get-select/dbt_snowflake_query_tags
     version: 2.5.0
-sha1_hash: c4789ef5619c517087a73d36d751e7424d85d7da
+sha1_hash: 24edf8a8a2dbe65ff0192d2504caeee0a39c0f8a
