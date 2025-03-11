@@ -12,14 +12,16 @@ cat <<EOT >> $DBT_PATH/profiles.yml
 fasttrack_cost_reporting:
   outputs:
     dev:
-      account: wt01712.west-europe.azure
-      authenticator: externalbrowser
+      account: account.region.cloud.snowflakecomputing.com
+      authenticator: externalbrowser # comment out if not using browser SSO
+      client_session_keep_alive: false
       database: fasttrack_cost_reporting_dev
+      private_key_path: $HOME/.ssh/snowflake_private_key.p8 # comment out if not using key-pair auth
       role: transformer_ft_dev
       schema: public
       threads: 1
       type: snowflake
-      user: some.one@twoday.com
+      user: some.one@email.com
       warehouse: transformer_ft_dev_wh
   target: dev
 
@@ -33,19 +35,20 @@ brew install uv
 
 venv:
 ```sh
-uv venv --python 3.13.1 && uv pip install dbt-core==1.9.1 dbt-snowflake==1.9.0 keyring==25.6.0
+uv venv --python 3.12.9 && uv pip install dbt-core==1.9.3 dbt-snowflake==1.9.2 keyring==25.6.0
 ```
 
-build:
+compile:
 ```sh
-source .venv/bin/activate && dbt deps && dbt build
+source .venv/bin/activate && dbt deps && dbt compile
 ```
 
 ### Future improvements
-- usage instructions
-- multi-currency support
-- improved test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
-- singular test over `f_cost_reporting` to ensure sums match across all granularities for every platform
-- `d_cost_reporting` test coverage
-- monorepo integration test project
-- CI/CD: add github action to dbt compile package and run unit tests before merging PRs to main
+- document usage instructions
+- support multiple currencies (only USD supported as Snowflake billing currency)
+- extend test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
+- singular test over `f_cost_reporting` to ensure sums match across all granularities and platforms
+- `d_cost_reporting` test coverage and column documentation
+- implement monorepo integration test project
+- CI/CD: add github action to compile the package and integration project locally and verify that
+all tests are passing before merging PRs to main

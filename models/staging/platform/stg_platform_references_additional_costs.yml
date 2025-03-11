@@ -82,6 +82,9 @@ models:
 unit_tests:
   - name: stg_platform_references_additional_costs__validate_results
     description: unit test to ensure date interpolation is consistent across supported granularities
+    config:
+      tags:
+        - tests_cost_reporting
     model: stg_platform_references_additional_costs
     given:
       - input: source('platform_references', 'additional_costs')
