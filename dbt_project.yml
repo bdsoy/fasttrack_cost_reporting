@@ -19,7 +19,6 @@ dispatch:
     search_order:
       - fasttrack_cost_reporting
       - dbt_snowflake_monitoring
-      - dbt_utils
       - dbt
 
 query-comment:
