@@ -1,6 +1,5 @@
 ## FT-SF-TRANSFORMATION-DBT-PLATFORM-COST-PKG
-home repo for the `fasttrack_cost_reporting` standalone dbt package aggregating
-azure+dbt+snowflake cost data as part of twoday's Fast Track solution
+standalone dbt package aggregating cost data from multiple sources for twoday's Fast Track solution
 
 ### Local development setup:
 dbt connection profile:
@@ -16,7 +15,7 @@ fasttrack_cost_reporting:
       authenticator: externalbrowser # comment out if not using browser SSO
       client_session_keep_alive: false
       database: fasttrack_cost_reporting_dev
-      private_key_path: $HOME/.ssh/snowflake_private_key.p8 # comment out if not using key-pair auth
+      private_key_path: $HOME/.ssh/sf_private_key.p8 # comment out if not using key-pair auth
       role: transformer_ft_dev
       schema: public
       threads: 1
@@ -43,12 +42,22 @@ compile:
 source .venv/bin/activate && dbt deps && dbt compile
 ```
 
+refresh data (inc. tests):
+```sh
+source .venv/bin/activate && dbt build
+```
+
+preview docs:
+```sh
+source .venv/bin/activate && dbt docs generate && dbt docs serve
+```
+
 ### Future improvements
 - document usage instructions
-- support multiple currencies (only USD supported as Snowflake billing currency)
+- support multiple currencies (only USD allowed as Snowflake billing currency for now)
 - extend test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
-- singular test over `f_cost_reporting` to ensure sums match across all granularities and platforms
-- `d_cost_reporting` test coverage and column documentation
+- add singular test over `f_cost_reporting` to ensure sums match across all granularities/platforms
+- add `d_cost_reporting` tests and column documentation
 - implement monorepo integration test project
-- CI/CD: add github action to compile the package and integration project locally and verify that
+- add github action to compile the package and integration project, generate docs and verify that
 all tests are passing before merging PRs to main
