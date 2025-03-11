@@ -48,3 +48,4 @@ source .venv/bin/activate && dbt deps && dbt build
 - singular test over `f_cost_reporting` to ensure sums match across all granularities for every platform
 - `d_cost_reporting` test coverage
 - monorepo integration test project
+- CI/CD: add github action to dbt compile package and run unit tests before merging PRs to main

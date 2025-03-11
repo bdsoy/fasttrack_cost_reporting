@@ -1,5 +1,5 @@
 name: 'fasttrack_cost_reporting'
-version: '1.0.1'
+version: '1.0.2'
 
 require-dbt-version: [">=1.8.0", "<2.0.0"]
 
@@ -131,4 +131,3 @@ vars:
   fasttrack_cost_reporting_snowflake_landing_schema: "landing_snowflake_monitoring"
   fasttrack_cost_reporting_staging_schema: "transform_cost_reporting"
   fasttrack_cost_reporting_transform_schema: "transform_cost_reporting"
- 
