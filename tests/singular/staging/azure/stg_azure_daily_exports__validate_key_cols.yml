@@ -1,0 +1,9 @@
+data_tests:
+  - name: stg_azure_daily_exports__validate_key_cols
+    description: |-
+      Singular test validating main columns:
+      - unique_key
+      - billing_date
+      - ingested_at
+      - resource_id
+      - meter_id

@@ -1,0 +1,10 @@
+data_tests:
+  - name: stg_platform_references_additional_costs__validate_key_cols
+    description: |-
+      Singular test validating main columns:
+      - unique_key
+      - billing_date
+      - platform
+      - account
+      - resource
+      - spend

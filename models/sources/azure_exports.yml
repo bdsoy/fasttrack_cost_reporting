@@ -1,0 +1,320 @@
+sources:
+  - name: azure_exports
+    schema: "{{ var('fasttrack_cost_reporting_azure_landing_schema') }}"
+    description: >-
+      Azure export tables used as primary sources from the
+      `{{ var('fasttrack_cost_reporting_azure_landing_schema') }}` schema
+    tables:
+      - name: daily_mtd
+        identifier: dailyexportmtd
+        description: >-
+          Externally-managed fact table storing _"month-to-2-days-ago"_  Azure cost data exports,
+          ref: [Azure Cost Management Export Data](https://learn.microsoft.com/en-us/azure/cost-management-billing/automate/understand-usage-details-fields)
+        columns:
+          - name: unique_id
+            data_type: text
+            description: not-actually-unique identifier indicating the exported cost source
+
+          - name: billingaccountname
+            data_type: text
+            description: Name of the billing account
+
+          - name: partnername
+            data_type: text
+            description: Name of the partner Microsoft Entra tenant
+
+          - name: resellername
+            data_type: text
+            description: The name of the reseller associated with the subscription
+
+          - name: resellermpnid
+            data_type: text
+            description: 	ID for the reseller associated with the subscription
+
+          - name: customertenantid
+            data_type: text
+            description: Identifier of the Microsoft Entra tenant of the customer's subscription
+
+          - name: customername
+            data_type: text
+            description: Name of the Microsoft Entra tenant for the customer's subscription
+
+          - name: costcenter
+            data_type: text
+            description: >-
+              The cost center defined for the subscription for tracking costs (only available in
+              open billing periods for MCA accounts)
+
+          - name: billingperiodenddate
+            data_type: text
+            description: The end date of the billing period.
+
+          - name: billingperiodstartdate
+            data_type: text
+            description: 	The start date of the billing period
+
+          - name: serviceperiodenddate
+            data_type: text
+            description: >-
+              The end date of the rating period that defined and locked pricing for the consumed
+              or purchased service
+
+          - name: serviceperiodstartdate
+            data_type: text
+            description: >-
+              The start date of the rating period that defined and locked pricing for the consumed
+              or purchased service
+
+          - name: billingdate
+            data_type: date
+            description: The billing date for the specified charge
+
+          - name: servicefamily
+            data_type: text
+            description: Service family that the service belongs to
+
+          - name: productorderid
+            data_type: text
+            description: Unique identifier for the product order
+
+          - name: productordername
+            data_type: text
+            description: Unique name for the product order
+
+          - name: consumedservice
+            data_type: text
+            description: Name of the service the charge is associated with
+
+          - name: meterid
+            data_type: text
+            description: The unique identifier for the meter
+
+          - name: metername
+            data_type: text
+            description: >-
+              The name of the meter. Purchases and Marketplace usage might be shown as blank or
+              unassigned.
+
+          - name: metercategory
+            data_type: text
+            description: >-
+              Name of the classification category for the meter. For example, Cloud services and
+              Networking. Purchases and Marketplace usage might be shown as blank or unassigned.
+
+          - name: metersubcategory
+            data_type: text
+            description: >-
+              Name of the meter subclassification category. Purchases and Marketplace usage might
+              be shown as blank or unassigned.
+
+          - name: meterregion
+            data_type: text
+            description: >-
+              The name of the Azure region associated with the meter. It generally aligns with the
+              resource location, except for certain global meters that are shared across regions.
+              In such cases, the meter region indicates the primary region of the meter.
+
+              Note: The meter is used to track the usage of specific services or resources, mainly
+              for billing purposes. Each Azure service, resource, and region have its own billing
+              meter ID that precisely reflects how its consumption and price are calculated.
+
+          - name: productid
+            data_type: text
+            description: 	Unique identifier for the product
+
+          - name: productname
+            data_type: text
+            description: Name of the product
+
+          - name: subscriptionid
+            data_type: text
+            description: Unique identifier for the Azure subscription
+
+          - name: subscriptionname
+            data_type: text
+            description: Name of the Azure subscription
+
+          - name: publishertype
+            data_type: text
+            description: >-
+                Supported values: Microsoft, Azure, AWS⁴, Marketplace. For MCA accounts, the value
+                can be Microsoft for first party charges and Marketplace for third party charges.
+                For EA and pay-as-you-go accounts, the value is Azure.
+
+          - name: publisherid
+            data_type: text
+            description: >-
+              The ID of the publisher. It's only available after the invoice is generated.
+
+          - name: publishername
+            data_type: text
+            description: >-
+              The name of the publisher. For first-party services, the value should be listed as
+              Microsoft or Microsoft Corporation
+
+          - name: resourcegroupname
+            data_type: text
+            description: >-
+              Name of the resource group the resource is in. Not all charges come from resources
+              deployed to resource groups. Charges that don't have a resource group are shown as
+              null or empty, Others, or Not applicable.
+
+          - name: resourceid
+            data_type: text
+            description: Unique identifier of the Azure Resource Manager resource
+
+          - name: resourcelocation
+            data_type: text
+            description: >-
+              The Azure region where the resource is deployed, also referred to as the datacenter
+              location where the resource is running.
+
+          - name: location
+            data_type: text
+            description: >-
+              The normalized location used to resolve inconsistencies in region names sent by
+              different Azure Resource Providers (RPs). The normalized location is based strictly
+              on the resource location sent by RPs in usage data and is programmatically
+              normalized to mitigate inconsistencies. Purchases and Marketplace usage might be
+              shown as blank or unassigned. For example, `US East`.
+
+          - name: effectiveprice
+            data_type: text
+            description: >-
+              The price for a given product or service representing the actual rate paid per unit
+
+          - name: quantity
+            data_type: text
+            description: >-
+              The number of units used by the given product or service for a given day
+
+          - name: unitofmeasure
+            data_type: text
+            description: >-
+              The unit of measure for billing for the service. For example, compute services are
+              billed per hour.
+
+          - name: chargetype
+            data_type: text
+            description: >-
+              Indicates whether the charge represents usage (Usage), a purchase (Purchase), or a
+              refund (Refund).
+
+          - name: billingcurrency
+            data_type: text
+            description: Currency associated with the billing account
+
+          - name: pricingcurrency
+            data_type: text
+            description: Currency used when rating based on negotiated prices
+
+          - name: costinbillingcurrency
+            data_type: text
+            description: Cost of the charge in the billing currency before credits or taxes
+
+          - name: costinusd
+            data_type: text
+            description: Cost of the charge in USD
+
+          - name: exchangeratepricingtobilling
+            data_type: text
+            description: >-
+              Exchange rate used converting cost from the pricing currency to the billing currency
+
+          - name: exchangeratedate
+            data_type: text
+            description: Date the exchange rate was established
+
+          - name: serviceinfo1
+            data_type: text
+            description: Service-specific metadata
+
+          - name: serviceinfo2
+            data_type: text
+            description: Legacy field with optional service-specific metadata
+
+          - name: additionalinfo
+            data_type: text
+            description: Service-specific metadata, e.g. an image type for a virtual machine
+
+          - name: tags
+            data_type: text
+            description: >-
+              Tags assigned to the resource. Doesn't include resource group tags. Can be used to
+              group or distribute costs for internal chargeback.
+
+          - name: paygprice
+            data_type: text
+            description: The market price (retail or list price) for a given product or service
+
+          - name: frequency
+            data_type: text
+            description: >-
+              Indicates whether a charge is expected to repeat. Charges can either happen once
+              (OneTime), repeat on a monthly or yearly basis (Recurring), or be based on usage
+              (UsageBased).
+
+          - name: term
+            data_type: text
+            description: >-
+              Displays the term for the validity of the offer. For example: For reserved
+              instances, it displays 12 months as the Term. For one-time purchases or recurring
+              purchases, Term is one month (SaaS, Marketplace Support).
+
+          - name: reservationid
+            data_type: text
+            description: Unique identifier for the purchased reservation instance.
+
+          - name: reservationname
+            data_type: text
+            description: Name of the purchased reservation instance.
+
+          - name: pricingmodel
+            data_type: text
+            description: >-
+              Identifier that indicates how the meter is priced. (Values: OnDemand, Reservation,
+              Spot, and SavingsPlan)
+
+          - name: unitprice
+            data_type: text
+            description: >-
+              The price for a given product or service inclusive of any negotiated discount on top
+              of the market price
+
+          - name: benefitid
+            data_type: text
+            description: Unique identifier for the purchased savings plan instance
+
+          - name: benefitname
+            data_type: text
+            description: Unique identifier for the purchased savings plan instance
+
+          - name: provider
+            data_type: text
+            description: >-
+              Identifier for product category or Line of Business. For example, Azure, Microsoft
+              365, and AWS.
+
+          - name: subscription
+            data_type: text
+            description: Unique identifier for the Azure subscription.
+
+          - name: path
+            data_type: text
+            description: snowpipe-sourced ingestion resource path
+
+          - name: ingested_date
+            data_type: date
+            description: >-
+              snowpipe-sourced date indicating the UTC *start* of the data load
+
+          - name: ingested_at
+            data_type: timestamp_ntz
+            description: >-
+              snowpipe-sourced timestamp indicating the UTC *start* of the data load
+
+          - name: batch_timestamp
+            data_type: timestamp_ntz
+            description: >-
+              snowpipe-sourced complimentary ingestion timestamp indicating start of
+              batch loading, in UTC

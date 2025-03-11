@@ -1,30 +1,134 @@
-name: fasttrack_cost_reporting
-version: "0.0.1"
+name: 'fasttrack_cost_reporting'
+version: '1.0.1'
 
-config-version: 2
-profile: default
+require-dbt-version: [">=1.8.0", "<2.0.0"]
 
-# analysis-paths: ["analyses"]
+profile: fasttrack_cost_reporting # must be found locally within $HOME/.dbt/profiles.yml
+
 macro-paths: ["macros"]
 model-paths: ["models"]
-# snapshot-paths: ["snapshots"]
-# seed-paths: ["seeds"]
 test-paths: ["tests"]
 
-clean-targets: # directories to be removed by `dbt clean`
-  - "target"
-  - "dbt_packages"
+target-path: "target"
+clean-targets:
+  - target
+  - dbt_packages
 
-# dispatch:
-#   - macro_namespace: dbt
-#     search_order:
-#       - fasttrack_cost_reporting
-#       - dbt_snowflake_monitoring
-#       - dbt
+dispatch:
+  - macro_namespace: dbt
+    search_order:
+      - fasttrack_cost_reporting
+      - dbt_snowflake_monitoring
+      - dbt_utils
+      - dbt
+
+query-comment:
+  comment: '--> query generated via dbt package fasttrack_cost_reporting <--'
+  append: true
+
+sources:
+  dbt_snowflake_monitoring:
+    staging:
+      snowflake_account_usage:
+        access_history:
+          +enabled: false
+        query_history:
+          +enabled: false
+        warehouse_events_history:
+          +enabled: false
+        warehouse_metering_history:
+          +enabled: false
+
+tests:
+  +tags:
+    - fasttrack_cost_reporting
+    - tests_cost_reporting
+  +docs:
+    node_color: "#696969"
 
 models:
-  fasttrack_cost_reporting:
-    +enabled: false
+  +persist_docs:
+    columns: true
+    relation: true
+  +tags:
+    - fasttrack_cost_reporting
 
   dbt_snowflake_monitoring:
-    +enabled: false
+    +schema: "{{ var('fasttrack_cost_reporting_snowflake_landing_schema', 'landing_snowflake_monitoring') }}"
+    +docs:
+      node_color: "#1E90FF"
+    +tags:
+      - dbt_snowflake_monitoring
+
+    cost_per_query:
+      +enabled: false
+    dbt_queries:
+      +enabled: false
+    query_base_object_access:
+      +enabled: false
+    query_base_table_access:
+      +enabled: false
+    query_direct_object_access:
+      +enabled: false
+    query_direct_table_access:
+      +enabled: false
+    query_history_enriched:
+      +enabled: false
+    warehouse_credits_map:
+      +enabled: false
+    warehouses_type2_dimension:
+      +enabled: false
+
+    staging:
+      stg_access_history:
+        +enabled: false
+      stg_query_history:
+        +enabled: false
+      stg_warehouse_metering_history:
+        +enabled: false
+
+  fasttrack_cost_reporting:
+    +materialized: view
+
+    staging:
+      +schema: "{{ var('fasttrack_cost_reporting_staging_schema', 'transform_cost_reporting') }}"
+      +docs:
+        node_color: "#663399"
+      +tags:
+        - staging_cost_reporting
+        - transform_cost_reporting
+
+    transform:
+      +schema: "{{ var('fasttrack_cost_reporting_transform_schema', 'transform_cost_reporting') }}"
+      +docs:
+        node_color: "#FF4500"
+      +tags:
+        - transform_cost_reporting
+
+      final:
+        +materialized: table
+
+    publish:
+      +schema: "{{ var('fasttrack_cost_reporting_publish_schema', 'publish_cost_reporting') }}"
+      +docs:
+        node_color: "#DC143C"
+      +tags:
+        - publish_cost_reporting
+      +post-hook:
+        - grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ get_cost_reporting_target_env() }}
+        - grant select on {{ this }} to role reporter_ft_{{ get_cost_reporting_target_env() }}
+
+vars:
+  dbt_constraints_enabled: true
+  dbt_constraints_sources_enabled: false # bypassed by default due to LOADER privileges required
+  fasttrack_cost_reporting_azure_landing_schema: "landing_azure_cost_data_export"
+  fasttrack_cost_reporting_azure_tags_key: "ProjectName"
+  fasttrack_cost_reporting_azure_tags_value: "Fast Track Development"
+  fasttrack_cost_reporting_db: "fasttrack_cost_reporting"
+  fasttrack_cost_reporting_publish_schema: "publish_cost_reporting"
+  fasttrack_cost_reporting_reference_schema: "reference_cost_reporting"
+  fasttrack_cost_reporting_reference_additional_costs_table: "fasttrack_additional_platform_costs"
+  fasttrack_cost_reporting_snowflake_landing_schema: "landing_snowflake_monitoring"
+  fasttrack_cost_reporting_staging_schema: "transform_cost_reporting"
+  fasttrack_cost_reporting_transform_schema: "transform_cost_reporting"
+ 

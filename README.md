@@ -1,15 +1,50 @@
-Welcome to your new dbt project!!!
+## FT-SF-TRANSFORMATION-DBT-PLATFORM-COST-PKG
+home repo for the `fasttrack_cost_reporting` standalone dbt package aggregating
+azure+dbt+snowflake cost data as part of twoday's Fast Track solution
 
-### Using the starter project
+### Local development setup:
+dbt connection profile:
+```sh
+export DBT_PATH="$HOME/.dbt"
+mkdir -p $DBT_PATH
+cat <<EOT >> $DBT_PATH/profiles.yml
 
-Try running the following commands:
-- dbt run
-- dbt test
+fasttrack_cost_reporting:
+  outputs:
+    dev:
+      account: wt01712.west-europe.azure
+      authenticator: externalbrowser
+      database: fasttrack_cost_reporting_dev
+      role: transformer_ft_dev
+      schema: public
+      threads: 1
+      type: snowflake
+      user: some.one@twoday.com
+      warehouse: transformer_ft_dev_wh
+  target: dev
 
+EOT
+```
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+uv:
+```sh
+brew install uv
+```
+
+venv:
+```sh
+uv venv --python 3.13.1 && uv pip install dbt-core==1.9.1 dbt-snowflake==1.9.0 keyring==25.6.0
+```
+
+build:
+```sh
+source .venv/bin/activate && dbt deps && dbt build
+```
+
+### Future improvements
+- usage instructions
+- multi-currency support
+- improved test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
+- singular test over `f_cost_reporting` to ensure sums match across all granularities for every platform
+- `d_cost_reporting` test coverage
+- monorepo integration test project

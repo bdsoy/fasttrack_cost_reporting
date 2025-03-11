@@ -1,0 +1,76 @@
+models:
+  - name: stg_snowflake_account_pipe_usage_history
+    description: >-
+      Incremental wrapper historizing the view
+      [`snowflake.account_usage.pipe_usage_history`](https://docs.snowflake.com/en/sql-reference/account-usage/pipe_usage_history)
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: pipe_id
+        data_type: number(38,0)
+        description: >- 
+          Internal/system-generated identifier for the pipe used for the data load. NULL if no
+          pipe name was specified in the query. Each row includes the totals for all pipes in
+          use within the time range.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: pipe_name
+        data_type: text
+        description: >-
+          Name of the pipe. Displays NULL for the internal (hidden) pipe object used to refresh
+          the metadata for an external table.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: start_time
+        data_type: timestamp_ltz
+        description: >-
+          Start of the time (in the local time zone) range in which data loading took place.
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: end_time
+        data_type: timestamp_ltz
+        description: >-
+          End of the time (in the local time zone) range in which data loading took place.
+        constraints:
+          - type: not_null
+
+      - name: credits_used
+        data_type: number(38,9)
+        description: Number of credits billed for Snowpipe data loads during the USAGE_DATE
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: bytes_inserted
+        data_type: float
+        description: Number of bytes loaded during the USAGE_DATE
+
+      - name: files_inserted
+        data_type: variant
+        description: Number of files loaded during the USAGE_DATE
+
+      - name: unique_key
+        data_type: number(19,0)
+        description: >-
+          unique hashed value over (extract('epoch_second', start_time), pipe_id)
+        constraints:
+          - type: not_null
+        data_tests:
+          - dbt_constraints.primary_key
+
+      - name: dbt_loaded_at
+        data_type: timestamp_ntz
+        description: control timestamp indicating when a row was refreshed via dbt, in UTC
+        constraints:
+          - type: not_null

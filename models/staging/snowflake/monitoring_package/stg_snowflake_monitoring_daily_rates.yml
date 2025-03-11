@@ -1,0 +1,55 @@
+models:
+  - name: stg_snowflake_monitoring_daily_rates
+    description: |-
+      wrapper model around the view `daily_rates` from the dbt_snowflake_monitoring pkg;
+
+      A copy of snowflake.organization_usage.rate_sheet_daily for the current Snowflake account, w/
+      missing dates inputed. This model accounts for the fact that multiple rates will appear on a
+      given day when the account is in overage. This happens for on-demand accounts, or fixed
+      contract accounts who have exceeded their remaining balance.
+
+      When the account is in overage, the usage_type will appear as 'compute' (instead of
+      'overage-compute'), but the effective_rate will be the one associated with `overage-compute`.
+      These instances can be identified using `is_overage_rate` to help understand why a rate may
+      have suddenly changed.
+
+      ref: [daily_rates](https://github.com/get-select/dbt-snowflake-monitoring/blob/5.3.1/models/daily_rates.sql)
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: ref_date
+        data_type: date
+        description: Date (in the UTC time zone) for the effective price
+        data_tests:
+          - not_null
+
+      - name: usage_type
+        data_type: text
+        description: The type of usage, which can be one of compute, storage, etc.
+
+      - name: service_type
+        data_type: text
+        description: The type of service, which can be one of compute or storage
+
+      - name: effective_rate
+        data_type: number(38,12)
+        description: The rate after applying any applicable discounts per the contract for the organization
+        data_tests:
+          - not_null
+
+      - name: currency
+        data_type: text
+        description: Currency of effect rate, retrieved from Snowflake's daily rate sheet
+
+      - name: is_overage_rate
+        data_type: boolean
+        description: Indicator for whether the effective_rate is an overage rate
+      
+      - name: is_latest_rate
+        data_type: boolean
+        description: Indicator for whether the effective_rate is the most recent
+
+      - name: dbt_loaded_at
+        data_type: timestamp_ntz
+        description: control timestamp indicating when a row was refreshed via dbt, in UTC

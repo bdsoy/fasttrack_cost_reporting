@@ -1,0 +1,92 @@
+models:
+  - name: stg_platform_references_additional_costs
+    description: >-
+      Extends Fast Track additional platform costs source table interpolating
+      costs on a daily basis according to the specified granularity
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: platform
+        data_type: text
+        description: >-
+          Platform name (service provider) associated to the additional cost
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: billing_date
+        data_type: date
+        description: >-
+          Date of the billing period for the additional cost
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: account
+        data_type: text
+        description: >-
+          Account identifier associated to the additional cost, same as `plaform` from source reference
+        constraints:
+          - type: not_null
+
+      - name: service_category
+        data_type: text
+        description: >-
+          Classification of the service charge coming from the platform service provider
+        constraints:
+          - type: not_null
+
+      - name: service_subcategory
+        data_type: text
+        description: >-
+          Sub-classification of the service subcharge coming from the platform service provider
+        constraints:
+          - type: not_null
+
+      - name: resource
+        data_type: text
+        description: >-
+          Describes the additional cost inference down to a daily basis
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: spend
+        data_type: number(38,12)
+        description: >-
+          Sum of daily spend for the additional cost
+        constraints:
+          - type: not_null
+        data_tests:
+          - not_null
+
+      - name: unique_key
+        data_type: number(19,0)
+        description: >-
+          hashed value over (billing_date, platform, service_category, service_subcategory, granularity)
+        constraints:
+          - type: not_null
+        data_tests:
+          - dbt_constraints.primary_key
+
+      - name: dbt_loaded_at
+        data_type: timestamp_ntz
+        description: control timestamp indicating when a row was refreshed via dbt, in UTC
+        constraints:
+          - type: not_null
+            
+unit_tests:
+  - name: stg_platform_references_additional_costs__validate_results
+    description: unit test to ensure date interpolation is consistent across supported granularities
+    model: stg_platform_references_additional_costs
+    given:
+      - input: source('platform_references', 'additional_costs')
+        format: csv
+        fixture: stg_platform_references_additional_costs__mock_input
+    expect:
+      format: csv
+      fixture: stg_platform_references_additional_costs__expected_output

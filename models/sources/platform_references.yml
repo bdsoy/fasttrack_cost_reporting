@@ -1,0 +1,58 @@
+sources:
+  - name: platform_references
+    schema: "{{ var('fasttrack_cost_reporting_reference_schema') }}"
+    description: >-
+      Fast Track mapping tables used as primary sources (references) from the
+      `{{ var('fasttrack_cost_reporting_reference_schema') }}` schema
+    tables:
+      - name: additional_costs
+        identifier: "{{ var('fasttrack_cost_reporting_reference_additional_costs_table') }}"
+        description: >-
+          Fact table listing additional platform costs associated to Fast Track deployments
+        columns:
+          - name: platform
+            data_type: text
+            description: >-
+              Platform service provider name associated with the additional cost
+          
+          - name: servicecharge
+            data_type: text
+            description: >-
+              Classification of the service charge coming from the platform service provider
+
+          - name: servicesubcharge
+            data_type: text
+            description: >-
+              Sub-classification of the service subcharge coming from the platform service provider
+
+          - name: billingdatefrom
+            data_type: date
+            description: >-
+              Start date of the billing period for the additional cost, must be parseable via
+              `to_date(billingdatefrom, 'AUTO')`
+
+          - name: billingdateto
+            data_type: date
+            description: >-
+              End date of the billing period for the additional cost, must be parseable via
+              `to_date(billingdateto, 'AUTO')`
+
+          - name: qty
+            data_type: number(38,12)
+            description: >-
+              Quantity related to the service charge
+
+          - name: price
+            data_type: number(38,12)
+            description: >-
+              Price per unit of the service charge
+
+          - name: currency
+            data_type: text
+            description: >-
+              Currency relative to the price per unit, attention: must be set to **USD** for now
+
+          - name: granularity
+            data_type: text
+            description: >-
+              Granularity of the service charge, supported values: daily/weekly/monthly/yearly

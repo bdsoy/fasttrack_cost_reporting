@@ -1,0 +1,124 @@
+models:
+  - name: stg_snowflake_account_tag_references
+    description: |-
+      Wrapper model joining tag-related Snowflake account usage views:
+      - [`snowflake.account_usage.tags`](https://docs.snowflake.com/en/sql-reference/account-usage/tags)  
+      - [`snowflake.account_usage.tag_references`](https://docs.snowflake.com/en/sql-reference/account-usage/tag_references)
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: tag_database
+        data_type: text
+        description: The database in which the tag is set
+
+      - name: tag_schema
+        data_type: text
+        description: The schema in which the tag is set
+
+      - name: tag_id
+        data_type: number(38,0)
+        description: >-
+          Internal/system-generated identifier for the tag, NULL for system tags
+
+      - name: tag_name
+        data_type: text
+        description: The name of the tag, this is the key in the key = 'value' pair of the tag
+
+      - name: tag_value
+        data_type: text
+        description: The value of tag, this is the 'value' in the key = 'value' pair of the tag
+
+      - name: object_database
+        data_type: text
+        description: >-
+          Database name of the referenced object for database and schema objects. If the object
+          is not a database or schema object, the value is empty.
+
+      - name: object_schema
+        data_type: text
+        description: >-
+          Schema name of the referenced object (for schema objects). If the referenced object is
+          not a schema object (e.g. warehouse), this value is empty.
+
+      - name: object_id
+        data_type: number(38,0)
+        description: Internal identifier of the referenced object.
+
+      - name: object_name
+        data_type: text
+        description: >-
+          Name of the referenced object if the tag association is on the object. If the tag
+          association is on a column, Snowflake returns the parent table name.
+
+      - name: object_deleted
+        data_type: timestamp_ltz
+        description: >-
+          Date and time when the associated object was dropped, or if the parentobject is
+          dropped.
+
+      - name: domain
+        data_type: text
+        description: >-
+          Domain of the reference object (e.g. table, view) if the tag association is on the
+          object. For columns, the domain is COLUMN if the tag association is on a column.
+
+      - name: column_id
+        data_type: number(38,0)
+        description: >-
+          The local identifier of the reference column; not applicable if the tag association
+          is not a column.
+
+      - name: column_name
+        data_type: text
+        description: >-
+          Name of the referenced column; not applicable if the tag association is not a column.
+ 
+      - name: tag_schema_id
+        data_type: number(38,0)
+        description: The local identifier of the tag schema
+
+      - name: tag_database_id
+        data_type: number(38,0)
+        description: The local identifier of the database in which the tag exists
+
+      - name: tag_owner
+        data_type: text
+        description: The name of the role that owns the tag
+
+      - name: tag_comment
+        data_type: variant
+        description: Comments for the tag, if any
+
+      - name: created
+        data_type: timestamp_ltz
+        description: Date and time when the tag was created
+
+      - name: last_altered
+        data_type: timestamp_ltz
+        description: >-
+          Date and time the object was last altered by a DML, DDL, or background metadata
+          operation
+
+      - name: deleted
+        data_type: timestamp_ltz
+        description: >-
+          Date and time when the tag was dropped, or the date and time when its parents were
+          dropped
+
+      - name: allowed_values
+        data_type: variant
+        description: >-
+          Specifies the possible string values that can be assigned to the tag when the tag is
+          set on an object or NULL if the tag does not have any specified allowed values.
+
+      - name: owner_role_type
+        data_type: varchar(13)
+        description: >-
+          The type of role that owns the object, for example ROLE. If a Snowflake Native App
+          owns the object, the value is APPLICATION. Snowflake returns NULL if you delete the
+          object because a deleted object does not have an owner role.
+
+      - name: dbt_loaded_at
+        data_type: timestamp_ntz
+        description: control timestamp indicating when a row was refreshed via dbt, in UTC

@@ -1,0 +1,9 @@
+data_tests:
+  - name: stg_snowflake_account_pipe_usage_history__validate_key_cols
+    description: |-
+      Singular test validating main columns:
+      - unique_key
+      - start_time
+      - end_time
+      - pipe_id
+      - pipe_name

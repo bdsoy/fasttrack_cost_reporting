@@ -1,0 +1,80 @@
+models:
+  - name: f_cost_reporting
+    description: >-
+      Fact table aggregating costs from all platform sources in multiple granularities
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: unique_key
+        data_type: text
+        description: >-
+          Unique key to identifying the cost record for the specified granularity
+        data_tests:
+          - dbt_constraints.primary_key
+      
+      - name: platform
+        data_type: text
+        description: >-
+          Platform name (service provider) associated to the additional cost, e.g. Azure, Snowflake
+        data_tests:
+          - not_null
+      
+      - name: billingdate
+        data_type: date
+        description: >-
+          Date of the billing period for the cost record, according to the specified granularity
+        data_tests:
+          - not_null
+
+      - name: account
+        data_type: text
+        description: >-
+          Account identifier associated to the additional cost
+
+      - name: service_category
+        data_type: text
+        description: >-
+          Classification of the service charge coming from the platform service provider
+
+      - name: service_subcategory
+        data_type: text
+        description: >-
+          Sub-classification of the service subcharge coming from the platform service provider
+
+      - name: resource
+        data_type: text
+        description: >-
+          Describes the source-aligned cost source identifier, varies according to platform
+
+      - name: environment
+        data_type: text
+        description: >-
+          Environment in which the cost was incurred, e.g. dev/test/prod/other
+
+      - name: tag_values
+        data_type: text
+        description: >-
+          Tag values associated to the cost record, according to the source syntax
+
+      - name: managed_by
+        data_type: text
+        description:
+          Entity maintaining the cost record, for most cases it should be only FAST_TRACK
+
+      - name: granularity
+        data_type: text
+        description: >-
+          Granularity of the cost record, e.g. daily, monthly, yearly
+        data_tests:
+          - not_null
+          - accepted_values:
+             values: [daily, weekly, monthly]
+             quote: true
+
+      - name: spend
+        data_type: number(38,12)
+        description: >-
+          Amount spent from the cost record, in USD
+        data_tests:
+          - not_null

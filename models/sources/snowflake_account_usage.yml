@@ -1,0 +1,189 @@
+sources:
+  - name: snowflake_account_usage
+    database: snowflake
+    schema: account_usage
+    description: >-
+      Source mapping to native schema `snowflake.account_usage` providing views describing the usage
+      of Snowflake resources in the current account.
+      [Snowflake Documentation](https://docs.snowflake.com/en/sql-reference/account-usage)
+    tables:
+      - name: pipe_usage_history
+        description: >-
+          View describing the history of data loaded into Snowflake tables using Snowpipe within the
+          last 365 days (1 year). The view displays the history of data loaded and credits billed for
+          your entire Snowflake account.
+          [Snowflake Documentation](https://docs.snowflake.com/en/sql-reference/account-usage/pipe_usage_history)
+        columns:
+          - name: pipe_id
+            data_type: number(38,0)
+            description: >- 
+              Internal/system-generated identifier for the pipe used for the data load. NULL if no
+              pipe name was specified in the query. Each row includes the totals for all pipes in
+              use within the time range.
+
+          - name: pipe_name
+            data_type: text
+            description: >-
+              Name of the pipe. Displays NULL for the internal (hidden) pipe object used to refresh
+              the metadata for an external table.
+
+          - name: start_time
+            data_type: timestamp_ltz
+            description: >-
+              Start of the time (in the local time zone) range in which data loading took place.
+
+          - name: end_time
+            data_type: timestamp_ltz
+            description: >-
+              End of the time (in the local time zone) range in which data loading took place.
+
+          - name: credits_used
+            data_type: number(38,9)
+            description: Number of credits billed for Snowpipe data loads during the USAGE_DATE
+
+          - name: bytes_inserted
+            data_type: float
+            description: Number of bytes loaded during the USAGE_DATE
+
+          - name: files_inserted
+            data_type: variant
+            description: Number of files loaded during the USAGE_DATE
+
+      - name: tags
+        description: >-
+          View listing the tags being used in the current account
+          [Snowflake Documentation](https://docs.snowflake.com/en/sql-reference/account-usage/tags)
+        columns:
+          - name: tag_id
+            data_type: number(38,0)
+            description: The local identifier of a tag
+
+          - name: tag_name
+            data_type: text
+            description: The name of a tag
+
+          - name: tag_schema_id
+            data_type: number(38,0)
+            description: The local identifier of the tag schema
+
+          - name: tag_schema
+            data_type: text
+            description: The name of schema in which the tag exists
+
+          - name: tag_database_id
+            data_type: number(38,0)
+            description: The local identifier of the database in which the tag exists
+
+          - name: tag_database
+            data_type: text
+            description: The name of the database in which the tag exists
+
+          - name: tag_owner
+            data_type: text
+            description: The name of the role that owns the tag
+
+          - name: tag_comment
+            data_type: variant
+            description: Comments for the tag, if any
+
+          - name: created
+            data_type: timestamp_ltz
+            description: Date and time when the tag was created
+
+          - name: last_altered
+            data_type: timestamp_ltz
+            description: >-
+              Date and time the object was last altered by a DML, DDL, or background metadata
+              operation
+
+          - name: deleted
+            data_type: timestamp_ltz
+            description: >-
+              Date and time when the tag was dropped, or the date and time when its parents were
+              dropped
+
+          - name: allowed_values
+            data_type: variant
+            description: >-
+              Specifies the possible string values that can be assigned to the tag when the tag is
+              set on an object or NULL if the tag does not have any specified allowed values.
+
+          - name: owner_role_type
+            data_type: varchar(13)
+            description: >-
+              The type of role that owns the object, for example ROLE. If a Snowflake Native App
+              owns the object, the value is APPLICATION. Snowflake returns NULL if you delete the
+              object because a deleted object does not have an owner role.
+
+      - name: tag_references
+        description: >-
+          View used to identify associations between objects and tags on the Snowflake account.
+          This view only records the direct relationship between the object and the tag. Tag lineage
+          is not included in this view.
+          [Snowflake Documentation](https://docs.snowflake.com/en/sql-reference/account-usage/tag_references)
+        columns:
+          - name: tag_database
+            data_type: text
+            description: The database in which the tag is set
+
+          - name: tag_schema
+            data_type: text
+            description: The schema in which the tag is set
+
+          - name: tag_id
+            data_type: number(38,0)
+            description: >-
+              Internal/system-generated identifier for the tag, NULL for system tags
+
+          - name: tag_name
+            data_type: text
+            description: The name of the tag, this is the key in the key = 'value' pair of the tag
+
+          - name: tag_value
+            data_type: text
+            description: The value of tag, this is the 'value' in the key = 'value' pair of the tag
+
+          - name: object_database
+            data_type: text
+            description: >- 
+              Database name of the referenced object for database and schema objects. If the object
+              is not a database or schema object, the value is empty.
+
+          - name: object_schema
+            data_type: text
+            description: >-
+              Schema name of the referenced object (for schema objects). If the referenced object is
+              not a schema object (e.g. warehouse), this value is empty.
+
+          - name: object_id
+            data_type: number(38,0)
+            description: Internal identifier of the referenced object.
+
+          - name: object_name
+            data_type: text
+            description: >-
+              Name of the referenced object if the tag association is on the object. If the tag
+              association is on a column, Snowflake returns the parent table name.
+
+          - name: object_deleted
+            data_type: timestamp_ltz
+            description: >-
+              Date and time when the associated object was dropped, or if the parentobject is
+              dropped.
+
+          - name: domain
+            data_type: text
+            description: >-
+              Domain of the reference object (e.g. table, view) if the tag association is on the
+              object. For columns, the domain is COLUMN if the tag association is on a column.
+
+          - name: column_id
+            data_type: number(38,0)
+            description: >-
+              The local identifier of the reference column; not applicable if the tag association
+              is not a column.
+
+          - name: column_name
+            data_type: text
+            description: >-
+              Name of the referenced column; not applicable if the tag association is not a column.
