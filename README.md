@@ -1,8 +1,8 @@
-## FT-SF-TRANSFORMATION-DBT-PLATFORM-COST-PKG
+# fasttrack_cost_reporting
 standalone dbt package aggregating cost data from multiple sources for twoday's Fast Track solution
 
-### Local development setup:
-dbt connection profile:
+## Local development setup:
+dbt connection profile (macOS):
 ```sh
 export DBT_PATH="$HOME/.dbt"
 mkdir -p $DBT_PATH
@@ -52,7 +52,7 @@ preview docs:
 source .venv/bin/activate && dbt docs generate && dbt docs serve
 ```
 
-### Future improvements
+## Future improvements
 - document usage instructions
 - support multiple currencies (only USD allowed as Snowflake billing currency for now)
 - extend test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
