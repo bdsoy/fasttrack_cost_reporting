@@ -79,8 +79,8 @@ models:
       +schema: "publish_cost_reporting" # can be changed by users via src. overrides
       +docs: { node_color: "#DC143C" }
       +post-hook:
-        - "grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ get_cost_reporting_target_env() }}"
-        - "grant select on {{ this }} to role reporter_ft_{{ get_cost_reporting_target_env() }}"
+        - "grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ target.name|trim }}"
+        - "grant select on {{ this }} to role reporter_ft_{{ target.name|trim }}"
       ### /\ off-scope on the package level
 
 vars:
