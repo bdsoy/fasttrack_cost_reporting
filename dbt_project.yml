@@ -78,15 +78,12 @@ models:
     publish:
       +schema: "publish_cost_reporting" # can be changed by users via src. overrides
       +docs: { node_color: "#DC143C" }
-      ### \/ uncomment to give reporter role read-only grants to the publish layer, off-scope on the package level
-      # +post-hook:
-      # - "grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ target.name|trim }}"
-      # - "grant select on {{ this }} to role reporter_ft_{{ target.name|trim }}"
-      ### /\ uncomment to give reporter role read-only grants to the publish layer, off-scope on the package level
+      +post-hook: "{{ grant_read_on_schema_objects() }}" # could also be managed via future grants
 
 vars:
-  dbt_cloud_account_id: 5235 # used on snowflake extras
-  dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/" # used on snowflake extras, varies according to dbt cloud region
+  dbt_cloud_account_id: 5235 # used on sf extras
+  dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/" # used on sf extras, depends on cloud region
   dbt_constraints_enabled: true
   fasttrack_cost_reporting_azure_tags_key: "ProjectName"
   fasttrack_cost_reporting_azure_tags_value: "Fast Track Development"
+  fasttrack_cost_reporting_read_roles: "reporter_ft" # comma-separated role prefixes ('' to disable)
