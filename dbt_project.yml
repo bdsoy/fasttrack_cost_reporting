@@ -78,10 +78,11 @@ models:
     publish:
       +schema: "publish_cost_reporting" # can be changed by users via src. overrides
       +docs: { node_color: "#DC143C" }
-      +post-hook:
-        - "grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ target.name|trim }}"
-        - "grant select on {{ this }} to role reporter_ft_{{ target.name|trim }}"
-      ### /\ off-scope on the package level
+      ### \/ uncomment to give reporter role read-only grants to the publish layer, off-scope on the package level
+      # +post-hook:
+      # - "grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ target.name|trim }}"
+      # - "grant select on {{ this }} to role reporter_ft_{{ target.name|trim }}"
+      ### /\ uncomment to give reporter role read-only grants to the publish layer, off-scope on the package level
 
 vars:
   dbt_cloud_account_id: 5235 # used on snowflake extras
