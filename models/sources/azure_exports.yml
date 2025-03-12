@@ -215,6 +215,11 @@ sources:
           - name: costinusd
             data_type: text
             description: Cost of the charge in USD
+            data_tests:
+              - expect_column_to_be_of_type:
+                  data_type: varchar
+                  config:
+                    severity: warn
 
           - name: exchangeratepricingtobilling
             data_type: text
