@@ -41,11 +41,17 @@ sources:
             data_type: number(38,12)
             description: >-
               Quantity related to the service charge
+            data_tests:
+              - expect_column_to_be_of_type:
+                  data_type: number(38,12)
 
           - name: price
             data_type: number(38,12)
             description: >-
               Price per unit of the service charge
+            data_tests:
+              - expect_column_to_be_of_type:
+                  data_type: number(38,12)
 
           - name: currency
             data_type: text
