@@ -1,9 +1,7 @@
 sources:
   - name: azure_exports
-    schema: "{{ var('fasttrack_cost_reporting_azure_landing_schema') }}"
-    description: >-
-      Azure export tables used as primary sources from the
-      `{{ var('fasttrack_cost_reporting_azure_landing_schema') }}` schema
+    schema: landing_azure_cost_data_export # can be changed by users via src. overrides
+    description: Azure export tables used as primary sources
     tables:
       - name: daily_mtd
         identifier: dailyexportmtd

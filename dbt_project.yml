@@ -41,7 +41,7 @@ models:
   +persist_docs: { columns: true, relation: true }
 
   dbt_snowflake_monitoring:
-    +schema: "landing_snowflake_monitoring" # users can override this default schema name on their own dbt_project.yml
+    +schema: "landing_snowflake_monitoring" # can be changed by users via src. overrides
     +docs: { node_color: "#1E90FF" }
 
     #### \/ uncomment to bypass snowflake extras
@@ -65,30 +65,27 @@ models:
     +materialized: "view"
 
     staging:
-      +schema: "transform_cost_reporting" # users can override this default schema name on their own dbt_project.yml
+      +schema: "transform_cost_reporting" # can be changed by users via src. overrides
       +docs: { node_color: "#663399" }
 
     transform:
-      +schema: "transform_cost_reporting" # users can override this default schema name on their own dbt_project.yml
+      +schema: "transform_cost_reporting" # can be changed by users via src. overrides
       +docs: { node_color: "#FF4500" }
 
       final:
         +materialized: "table"
 
     publish:
-      +schema: "publish_cost_reporting" # users can override this default schema name on their own dbt_project.yml
+      +schema: "publish_cost_reporting" # can be changed by users via src. overrides
       +docs: { node_color: "#DC143C" }
       +post-hook:
         - "grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ get_cost_reporting_target_env() }}"
         - "grant select on {{ this }} to role reporter_ft_{{ get_cost_reporting_target_env() }}"
+      ### /\ off-scope on the package level
 
 vars:
   dbt_cloud_account_id: 5235 # used on snowflake extras
   dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/" # used on snowflake extras, varies according to dbt cloud region
   dbt_constraints_enabled: true
-  fasttrack_cost_reporting_azure_landing_schema: "landing_azure_cost_data_export"
   fasttrack_cost_reporting_azure_tags_key: "ProjectName"
   fasttrack_cost_reporting_azure_tags_value: "Fast Track Development"
-  fasttrack_cost_reporting_db: "fasttrack_cost_reporting"
-  fasttrack_cost_reporting_reference_schema: "reference_cost_reporting"
-  fasttrack_cost_reporting_reference_additional_costs_table: "fasttrack_additional_platform_costs"

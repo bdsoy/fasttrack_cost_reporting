@@ -7,7 +7,7 @@ where abs(coalesce(cost_in_usd, 0)) > 0
   and len(meter_id) > 0
   and {{
     'tags:"{}" ilike \'{}\''.format(
-      var('fasttrack_cost_reporting_azure_tags_key'),
-      var('fasttrack_cost_reporting_azure_tags_value')
+      var('fasttrack_cost_reporting_azure_tags_key', 'ProjectName'),
+      var('fasttrack_cost_reporting_azure_tags_value', 'Fast Track Development')
     )
   }}
