@@ -2,17 +2,23 @@
   helper macro for copying azure exports into snowflake, to be used externally
 */-#}
 
-{%- macro copy_into_azure_cost_data(subscriptionname, stagename)  -%}
-
-{%- set fasttrack_cost_reporting_db = var('fasttrack_cost_reporting_db') -%}
-{%- set fasttrack_cost_reporting_azure_landing_schema = var('fasttrack_cost_reporting_azure_landing_schema') -%}
-
-{%- set env = get_cost_reporting_target_env() -%}
-
+{%-
+  macro copy_into_azure_cost_data(
+    subscriptionname,
+    stagename='stage_azure_cost_data_export',
+    fileformat='fmt_csv',
+    sourcedatabase=target.database,
+    sourceschema='landing_azure_cost_data_export',
+    sourcepath='dailyexportmtd',
+    targetdatabase=target.database,
+    targetschema='landing_azure_cost_data_export',
+    targettable='dailyexportmtd'
+  ) 
+-%}
 
 {% set copy_into %}
 
-copy into {{ fasttrack_cost_reporting_db }}_{{ env }}.{{ fasttrack_cost_reporting_azure_landing_schema }}.dailyexportmtd 
+copy into {{ targetdatabase }}.{{ targetschemaa }}.{{ targettable }}
 from (
   select
     to_char(try_to_date(t.$12)) || t.$30 || $17 as unique_id,
@@ -77,9 +83,9 @@ from (
     convert_timezone('UTC', metadata$start_scan_time)::date as ingested_date,
     convert_timezone('UTC', metadata$start_scan_time)::timestamp_ntz as ingested_at,
     convert_timezone('UTC', current_timestamp())::timestamp_ntz as batch_timestamp
-  from @{{ fasttrack_cost_reporting_db }}_{{ env }}.{{ fasttrack_cost_reporting_azure_landing_schema }}.{{ stagename }}/{{ subscriptionname }}/dailyexportmtd/ as t
+  from @{{ sourcedatabase }}.{{ sourceschema }}.{{ stagename }}/{{ subscriptionname }}/{{ sourcepath }}/ as t
 )
-file_format = (format_name = '{{ fasttrack_cost_reporting_db }}_{{ env }}.{{ fasttrack_cost_reporting_azure_landing_schema }}.FMT_CSV');
+file_format = (format_name = '{{ sourcedatabase }}.{{ sourceschema }}.{{ fileformat }}');
 
 {%- endset -%}
 

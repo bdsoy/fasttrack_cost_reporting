@@ -1,12 +1,10 @@
 sources:
   - name: platform_references
-    schema: "{{ var('fasttrack_cost_reporting_reference_schema') }}"
-    description: >-
-      Fast Track mapping tables used as primary sources (references) from the
-      `{{ var('fasttrack_cost_reporting_reference_schema') }}` schema
+    schema: reference_cost_reporting # can be changed by users via src. overrides
+    description: Fast Track mapping tables used as primary sources (references)
     tables:
       - name: additional_costs
-        identifier: "{{ var('fasttrack_cost_reporting_reference_additional_costs_table') }}"
+        identifier: fasttrack_additional_platform_costs # can be changed by users via src. overrides
         description: >-
           Fact table listing additional platform costs associated to Fast Track deployments
         columns:
