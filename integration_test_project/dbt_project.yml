@@ -1,0 +1,39 @@
+name: "fasttrack_cost_reporting_tests"
+version: "1.0.0"
+
+require-dbt-version: [">=1.8.0", "<2.0.0"]
+
+profile: "fasttrack_cost_reporting_test" # must exist within $HOME/.dbt/profiles.yml
+
+macro-paths: ["macros"]
+model-paths: ["models"]
+test-paths: ["tests"]
+
+target-path: "target"
+clean-targets: ["dbt_packages", "logs", "target"]
+
+dispatch:
+  - macro_namespace: "dbt"
+    search_order: 
+      - "fasttrack_cost_reporting_tests"
+      - "fasttrack_cost_reporting"
+      - "dbt_snowflake_monitoring"
+      - "dbt"
+
+query-comment:
+  comment: "{{ dbt_snowflake_monitoring.get_query_comment(node) }}"
+  append: true
+
+models:
+  +persist_docs: { columns: true, relation: true }
+
+  dbt_snowflake_monitoring:
+    +schema: "landing_snowflake_monitoring"
+
+vars:
+  dbt_cloud_account_id: 5235
+  dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/"
+  dbt_constraints_enabled: true
+  fasttrack_cost_reporting_azure_tags_key: "ProjectName"
+  fasttrack_cost_reporting_azure_tags_value: "Fast Track Development"
+  fasttrack_cost_reporting_read_roles: "reporter_ft" # comma-separated role prefixes ('' to disable)
