@@ -3,7 +3,7 @@ sources:
     database: snowflake
     schema: account_usage
     description: >-
-      Source mapping to native schema `snowflake.account_usage` providing views describing the usage
+      Source over native schema `snowflake.account_usage` providing views describing the usage
       of Snowflake resources in the current account.
       [Snowflake Documentation](https://docs.snowflake.com/en/sql-reference/account-usage)
     tables:
@@ -187,3 +187,31 @@ sources:
             data_type: text
             description: >-
               Name of the referenced column; not applicable if the tag association is not a column.
+
+  - name: snowflake_account_usage
+    overrides: dbt_snowflake_monitoring
+    description: >-
+      Source over native schema `snowflake.account_usage` providing views describing the usage
+      of Snowflake resources in the current account.
+      [Snowflake Documentation](https://docs.snowflake.com/en/sql-reference/account-usage)
+    tables:
+      - name: access_history
+      - name: database_storage_usage_history
+      - name: metering_daily_history
+      - name: metering_history
+      - name: query_history
+      - name: serverless_task_history
+      - name: stage_storage_usage_history
+      - name: warehouse_events_history
+      - name: warehouse_metering_history
+
+  - name: snowflake_organization_usage
+    overrides: dbt_snowflake_monitoring
+    description: >-
+      Source over native schema `snowflake.organization_usage` providing views describing the usage
+      of Snowflake resources in the current account.
+      [Snowflake Documentation](https://docs.snowflake.com/en/sql-reference/organization-usage)
+    tables:
+      - name: rate_sheet_daily
+      - name: remaining_balance_daily
+      - name: usage_in_currency_daily
