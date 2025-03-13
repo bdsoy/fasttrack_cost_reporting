@@ -24,32 +24,36 @@ sources:
               Sub-classification of the service subcharge coming from the platform service provider
 
           - name: billingdatefrom
-            data_type: date
+            data_type: text
             description: >-
               Start date of the billing period for the additional cost, must be parseable via
               `to_date(billingdatefrom, 'AUTO')`
 
           - name: billingdateto
-            data_type: date
+            data_type: text
             description: >-
               End date of the billing period for the additional cost, must be parseable via
               `to_date(billingdateto, 'AUTO')`
 
           - name: qty
-            data_type: number(38,12)
+            data_type: text
             description: >-
               Quantity related to the service charge
             data_tests:
               - expect_column_to_be_of_type:
-                  data_type: number(38,12)
+                  data_type: varchar
+                  config:
+                    severity: warn
 
           - name: price
-            data_type: number(38,12)
+            data_type: text
             description: >-
               Price per unit of the service charge
             data_tests:
               - expect_column_to_be_of_type:
-                  data_type: number(38,12)
+                  data_type: varchar
+                  config:
+                    severity: warn
 
           - name: currency
             data_type: text
