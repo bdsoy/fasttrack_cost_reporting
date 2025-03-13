@@ -1,6 +1,11 @@
 # fasttrack_cost_reporting
 standalone dbt package aggregating cost data from multiple sources for twoday's Fast Track solution
 
+## Documentation
+- [dbt Docs page for all package resources](https://get-select.github.io/dbt-snowflake-monitoring/#!/overview)
+- [main lineage](https://bdsoy.github.io/fasttrack_cost_reporting/#!/overview?g_v=1&g_i=%2Bd_cost_reporting_tags%20%2Bf_cost_reporting)
+- [final published fact: `f_cost_reporting`](https://bdsoy.github.io/fasttrack_cost_reporting/#!/model/model.fasttrack_cost_reporting.f_cost_reporting#details)
+
 ## Local development setup:
 dbt connection profile (macOS):
 ```sh
@@ -58,5 +63,6 @@ source .venv/bin/activate && dbt docs generate && dbt docs serve
 - extend test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
 - add singular test over `f_cost_reporting` to ensure sums match across all granularities/platforms
 - add `d_cost_reporting` tests and column documentation
+- customize/enhance dbt Docs package documentation
 - add github action to compile the package and integration project, generate docs and verify that
 all tests are passing before merging PRs to main

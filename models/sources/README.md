@@ -123,7 +123,7 @@ create or replace table [export_db].[export_schema].dailyexportmtd (
 ```
 
 obs. the package macro
-[`fasttrack_cost_reporting.copy_into_azure_cost_data`](https://github.com/bdsoy/fasttrack_cost_reporting/blob/main/macros/azure/copy_into_azure_cost_data.sql)
+[`fasttrack_cost_reporting.copy_into_azure_cost_data`](https://bdsoy.github.io/fasttrack_cost_reporting/#!/macro/macro.fasttrack_cost_reporting.copy_into_azure_cost_data)
 is provided as a helper to load azure cost data into this table, via e.g.:
 ```sh
 dbt run-operation copy_into_azure_cost_data --args '{ subscriptionname: DEV_TST___ISOLATED___FASTTRACK_SF_DEV, stagename: STAGE_AZURE_COST_DATA_EXPORT_DEV }'
