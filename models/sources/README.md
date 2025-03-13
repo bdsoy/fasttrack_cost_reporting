@@ -52,7 +52,8 @@ sources:
 ```
 
 ## azure_exports.daily_mtd
-source table/view of azure month-to-date [cost data exports](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-export-acm-data)
+source table/view of azure month-to-date
+[cost data exports](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-export-acm-data)
 
 ```sql
 create or replace table [export_db].[export_schema].dailyexportmtd (
@@ -121,8 +122,9 @@ create or replace table [export_db].[export_schema].dailyexportmtd (
 );
 ```
 
-obs. the package macro `fasttrack_cost_reporting.copy_into_azure_cost_data.sql` is provided as a
-helper to load azure cost data into this table, via e.g.:
+obs. the package macro
+[`fasttrack_cost_reporting.copy_into_azure_cost_data`](https://github.com/bdsoy/fasttrack_cost_reporting/blob/main/macros/azure/copy_into_azure_cost_data.sql)
+is provided as a helper to load azure cost data into this table, via e.g.:
 ```sh
 dbt run-operation copy_into_azure_cost_data --args '{ subscriptionname: DEV_TST___ISOLATED___FASTTRACK_SF_DEV, stagename: STAGE_AZURE_COST_DATA_EXPORT_DEV }'
 ```
@@ -228,7 +230,10 @@ mapping table with the correct schema is still required for the package to work
 
 ## snowflake sources
 snowflake metadata sources `snowflake_account_usage` and `snowflake_organization_usage` do not
-require additional setup configurations as these are standardized but it's important to ensure that `ORGADMIN` is enabled on the snowflake account (instructions [here](https://select.dev/docs/snowflake-metadata-access#step-5-ensure-your-account-has-orgadmin-access)) and that the dbt user role has sufficient privileges (see below) to read cost data for the account
+require additional setup configurations as these are standardized but it's important to ensure
+that `ORGADMIN` is enabled on the snowflake account (instructions
+[here](https://select.dev/docs/snowflake-metadata-access#step-5-ensure-your-account-has-orgadmin-access))
+and that the dbt user role has sufficient privileges (see below) to read cost data for the account
 
 ```sql
 grant imported privileges on database snowflake to role transformer_ft_[env];
