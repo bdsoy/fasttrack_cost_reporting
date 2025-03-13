@@ -58,6 +58,5 @@ source .venv/bin/activate && dbt docs generate && dbt docs serve
 - extend test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
 - add singular test over `f_cost_reporting` to ensure sums match across all granularities/platforms
 - add `d_cost_reporting` tests and column documentation
-- implement monorepo integration test project
 - add github action to compile the package and integration project, generate docs and verify that
 all tests are passing before merging PRs to main
