@@ -32,7 +32,7 @@ packages:
 run [`dbt deps`](https://docs.getdbt.com/reference/commands/deps) to install the package
 
 include the following required settings to the proejct
-[dbt_project.yaml](https://docs.getdbt.com/reference/dbt_project.yml) file:
+[dbt_project.yml](https://docs.getdbt.com/reference/dbt_project.yml) file:
 ```yaml
 # ensure correct macro precedence, so that e.g. query-tags work properly without side-effects
 dispatch:
@@ -49,7 +49,7 @@ query-comment:
   append: true
 ```
 
-additional optional configs may also be added to `dbt_project.yaml` to override defaults such as:
+additional optional configs may also be added to `dbt_project.yml` to override defaults such as:
 ```yaml
 # define destination schemas for all provided models (dbt will create them, if not already existing)
 models:

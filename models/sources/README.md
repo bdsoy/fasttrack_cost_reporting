@@ -147,7 +147,7 @@ Fast Track mapping tables used as primary sources (references)
     dbt,Team Licence,Developer Licence Per User,2025-01-01,2025-12-31,8,100,USD,Monthly
     ```
 
-  - #### seeds/fasttrack_additional_platform_costs.yaml
+  - #### seeds/fasttrack_additional_platform_costs.yml
     ```yaml
     seeds:
       - name: fasttrack_additional_platform_costs
@@ -168,7 +168,7 @@ Fast Track mapping tables used as primary sources (references)
             granularity: text # accepted values: daily | weekly | monthly | yearly       
     ```
 
-  - #### dbt_project.yaml
+  - #### dbt_project.yml
     alternative option to configure seeds on the project-level:
 
     ```yaml
