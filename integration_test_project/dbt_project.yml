@@ -1,8 +1,6 @@
 name: "fasttrack_cost_reporting_tests"
 version: "1.0.0"
 
-require-dbt-version: [">=1.8.0", "<2.0.0"]
-
 profile: "fasttrack_cost_reporting_test" # must exist within $HOME/.dbt/profiles.yml
 
 macro-paths: ["macros"]
@@ -25,15 +23,33 @@ query-comment:
   append: true
 
 models:
-  +persist_docs: { columns: true, relation: true }
-
   dbt_snowflake_monitoring:
     +schema: "landing_snowflake_monitoring"
 
+  fasttrack_cost_reporting:
+    staging:
+      +schema: "transform_cost_reporting" # schema for stg_% models
+
+    transform:
+      +schema: "transform_cost_reporting" # schema for t_% models
+
+    publish:
+      +schema: "publish_cost_reporting" # schema for d_%, f_% models
+
 vars:
-  dbt_cloud_account_id: 5235
-  dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/"
-  dbt_constraints_enabled: true
-  fasttrack_cost_reporting_azure_tags_key: "ProjectName"
-  fasttrack_cost_reporting_azure_tags_value: "Fast Track Development"
-  fasttrack_cost_reporting_read_roles: "reporter_ft" # comma-separated role prefixes ('' to disable)
+  dbt_constraints:
+    # enable/disable pushing model constraints to the target db
+    dbt_constraints_enabled: false
+
+  dbt_snowflake_monitoring:
+    # optional dbt cloud metadata, used to enrich dbt-tagged snowflake monitoring data
+    dbt_cloud_account_id: 5235
+    dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/"
+
+  fasttrack_cost_reporting:
+    # azure tags key/value for fasttrack (costs in other tags will not be taken into account)
+    fasttrack_cost_reporting:azure_tags_key: "ProjectName"
+    fasttrack_cost_reporting:azure_tags_value: "Fast Track Development"
+
+    # comma-separated role prefixes to be granted publish read privileges data, '' or ',' to bypass
+    fasttrack_cost_reporting:read_roles: ","
