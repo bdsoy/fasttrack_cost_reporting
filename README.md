@@ -47,7 +47,17 @@ query-comment:
 
 models:
   dbt_snowflake_monitoring:
-    +schema: "landing_snowflake_monitoring" # default schema for `dbt_snowflake_monitoring` models 
+    +schema: "landing_snowflake_monitoring"
+
+  fasttrack_cost_reporting:
+    staging:
+      +schema: "transform_cost_reporting" # schema for stg_% models
+
+    transform:
+      +schema: "transform_cost_reporting" # schema for t_% models
+
+    publish:
+      +schema: "publish_cost_reporting" # schema for d_%, f_% models
 
 sources:
   fasttrack_cost_reporting:
