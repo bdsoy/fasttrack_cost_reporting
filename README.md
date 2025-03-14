@@ -33,6 +33,7 @@ run [`dbt deps`](https://docs.getdbt.com/reference/commands/deps) to install the
 
 include the following in your [dbt_project.yaml](https://docs.getdbt.com/reference/dbt_project.yml) file:
 ```yaml
+# ensure correct macro precedence, e.g. so that query-tags are setup properly without side-effects
 dispatch:
   - macro_namespace: "dbt"
     search_order: 
@@ -41,10 +42,12 @@ dispatch:
       - "dbt_snowflake_monitoring"
       - "dbt"
 
+# ensure dbt models get tagged accordingly on snowflake, so that detailed cost info can be traced
 query-comment:
   comment: "{{ dbt_snowflake_monitoring.get_query_comment(node) }}"
   append: true
 
+# define destination schemas for all provided models (dbt will create them, if not already existing)
 models:
   dbt_snowflake_monitoring:
     +schema: "landing_snowflake_monitoring"
@@ -59,6 +62,7 @@ models:
     publish:
       +schema: "publish_cost_reporting" # schema for d_%, f_% models
 
+# specify source locations here if not using fasttrack defaults or overriding them somewhere else
 sources:
   fasttrack_cost_reporting:
     azure_exports:
@@ -73,15 +77,16 @@ sources:
       additional_costs:
         +identifier: fasttrack_additional_platform_costs # default mapping table/view for additional recurring costs
 
+# configure package variables, defaults shown below
 vars:
   dbt_constraints:
     # enable/disable pushing model constraints to the target db
-    dbt_constraints_enabled: false
+    dbt_constraints_enabled: true
 
   dbt_snowflake_monitoring:
     # optional dbt cloud metadata, used to enrich dbt-tagged snowflake monitoring data
-    dbt_cloud_account_id: 5235
-    dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/"
+    dbt_cloud_account_id: 5235 # kaito partner account id, replace accordingly
+    dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/" # varies per dbt cloud enterprise region
 
   fasttrack_cost_reporting:
     # azure tags key/value for fasttrack (costs in other tags will not be taken into account)
@@ -89,7 +94,7 @@ vars:
     fasttrack_cost_reporting:azure_tags_value: "Fast Track Development"
 
     # comma-separated role prefixes to be granted publish read privileges data, '' or ',' to bypass
-    fasttrack_cost_reporting:read_roles: ","
+    fasttrack_cost_reporting:read_roles: "reporter_ft" # obs. "_[target.name]" always gets appended
 ```
 
 see instructions below for more detailed info on package configs:
@@ -185,15 +190,18 @@ dbt docs generate && dbt docs serve
 ```
 
 ## future improvements
-- [v2]: move unit tests to `integration_test_project` to improve package usability
 - [v2]: add additional costs seed to `integration_test_project`
-- [v2]: update azure devops reference fasttrack project to use pkg v2
+- [v2]: move unit tests to `integration_test_project` to improve package usability
 - [v2]: review readme incomplete instructions / TODOs
+- [v2]: add project variable to allow bypassing adding `_{{ target.name }}` suffixes to read roles
+- [v2]: add access scope controls to non-public internal package resources 
+- [v2]: update azure devops reference fasttrack project to use pkg v2
 - ~~[v2]: review var nomenclature~~
 - support multiple billing currencies (only USD allowed as Snowflake billing currency for now)
 - extend test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
-- add sinular test over `f_cost_reporting` to ensure sums match across all granularities/platforms
+- add singular test over `f_cost_reporting` to ensure sums match across all granularities/platforms
 - add `d_cost_reporting` tests and column documentation
-- customize/enhance dbt Docs package documentation
+- customize the dbt Docs package documentation homepage
+- add yaml file for macros and other existing resources yet without descriptions to show on dbt Docs
 - add github action to compile the package and integration project, generate docs and verify that
 all tests are passing before merging PRs to main
