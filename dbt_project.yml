@@ -23,17 +23,6 @@ query-comment:
   comment: "{{ dbt_snowflake_monitoring.get_query_comment(node) }}"
   append: true
 
-#### \/ uncomment to bypass snowflake extras
-# sources:
-#   dbt_snowflake_monitoring:
-#     staging:
-#       snowflake_account_usage:
-#         access_history: { +enabled: false }
-#         query_history: { +enabled: false }
-#         warehouse_events_history: { +enabled: false }
-#         warehouse_metering_history: { +enabled: false }
-#### /\ uncomment to bypass snowflake extras
-
 tests:
   +docs: { node_color: "#696969" }
 
@@ -43,23 +32,6 @@ models:
   dbt_snowflake_monitoring:
     +schema: "landing_snowflake_monitoring" # can be changed by users via src. overrides
     +docs: { node_color: "#1E90FF" }
-
-    #### \/ uncomment to bypass snowflake extras
-    # cost_per_query: { +enabled: false }
-    # dbt_queries: { +enabled: false }
-    # query_base_object_access: { +enabled: false }
-    # query_base_table_access: { +enabled: false }
-    # query_direct_object_access: { +enabled: false }
-    # query_direct_table_access: { +enabled: false }
-    # query_history_enriched: { +enabled: false }
-    # warehouse_credits_map: { +enabled: false }
-    # warehouses_type2_dimension: { +enabled: false }
-
-    # staging:
-    #   stg_access_history: { +enabled: false }
-    #   stg_query_history: { +enabled: false }
-    #   stg_warehouse_metering_history: { +enabled: false }
-    #### /\ uncomment to bypass snowflake extras
 
   fasttrack_cost_reporting:
     +materialized: "view"
@@ -78,12 +50,22 @@ models:
     publish:
       +schema: "publish_cost_reporting" # can be changed by users via src. overrides
       +docs: { node_color: "#DC143C" }
-      +post-hook: "{{ grant_read_on_schema_objects() }}" # could also be managed via future grants
+      +post-hook: "{{ grant_read_on_schema_objects() }}" # bypassed/configured via var
 
 vars:
-  dbt_cloud_account_id: 5235 # used on sf extras
-  dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/" # used on sf extras, depends on cloud region
-  dbt_constraints_enabled: true
-  fasttrack_cost_reporting_azure_tags_key: "ProjectName"
-  fasttrack_cost_reporting_azure_tags_value: "Fast Track Development"
-  fasttrack_cost_reporting_read_roles: "reporter_ft" # comma-separated role prefixes ('' to disable)
+  dbt_constraints:
+    # enable/disable pushing model constraints to the target db  
+    dbt_constraints_enabled: true
+
+  dbt_snowflake_monitoring:
+    # optional dbt cloud metadata, used to enrich dbt-tagged snowflake monitoring data
+    dbt_cloud_account_id: 5235
+    dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/"
+
+  fasttrack_cost_reporting:
+    # azure tags key/value for fasttrack (costs in other tags will not be taken into account)
+    fasttrack_cost_reporting:azure_tags_key: "ProjectName"
+    fasttrack_cost_reporting:azure_tags_value: "Fast Track Development"
+
+    # comma-separated role prefixes to be granted publish read privileges data, '' or ',' to bypass
+    fasttrack_cost_reporting:read_roles: "reporter_ft"

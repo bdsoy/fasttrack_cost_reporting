@@ -67,9 +67,9 @@ vars:
   dbt_cloud_account_id: 5235 # optional, used as metadata
   dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/" # optional, used as metadata, varies across dbt cloud regions
   dbt_constraints_enabled: true # pass false to bypass propagating `dbt_constraints` to Snowflake
-  fasttrack_cost_reporting_azure_tags_key: "ProjectName" # azure tag key used for attributing fasttrack azure costs
-  fasttrack_cost_reporting_azure_tags_value: "Fast Track Development" # azure tag value used for attributing fasttrack azure costs
-  fasttrack_cost_reporting_read_roles: "reporter_ft" # comma-separated role prefixes ('' or ',' to disable publish grants)
+  fasttrack_cost_reporting:azure_tags_key: "ProjectName" # azure tag key used for attributing fasttrack azure costs
+  fasttrack_cost_reporting:azure_tags_value: "Fast Track Development" # azure tag value used for attributing fasttrack azure costs
+  fasttrack_cost_reporting:read_roles: "reporter_ft" # comma-separated role prefixes ('' or ',' to disable publish grants)
 ```
 
 see instructions below for more detailed info on package configs:
@@ -167,12 +167,12 @@ dbt docs generate && dbt docs serve
 ## future improvements
 - [v2]: move unit tests to `integration_test_project` to improve package usability
 - [v2]: add additional costs seed to `integration_test_project`
-- [v2]: update azure devops reference fasttrack project to use v2
+- [v2]: update azure devops reference fasttrack project to use pkg v2
 - [v2]: review readme incomplete instructions / TODOs
-- [v2]: review var nomenclature
+- ~~[v2]: review var nomenclature~~
 - support multiple billing currencies (only USD allowed as Snowflake billing currency for now)
 - extend test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
-- add singular test over `f_cost_reporting` to ensure sums match across all granularities/platforms
+- add sinular test over `f_cost_reporting` to ensure sums match across all granularities/platforms
 - add `d_cost_reporting` tests and column documentation
 - customize/enhance dbt Docs package documentation
 - add github action to compile the package and integration project, generate docs and verify that

@@ -4,7 +4,7 @@
 
 {% macro grant_read_on_schema_objects() -%}
 
-{%- set read_roles_var = var('fasttrack_cost_reporting_read_roles', 'reporter_ft') -%}
+{%- set read_roles_var = var('fasttrack_cost_reporting:read_roles', 'reporter_ft') -%}
 {%- set role_suffix = '_' + target.name -%}
 
 {%- for role_prefix in read_roles_var.split(',') if role_prefix|length %}
