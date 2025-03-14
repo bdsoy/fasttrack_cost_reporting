@@ -64,12 +64,22 @@ sources:
         +identifier: fasttrack_additional_platform_costs # default mapping table/view for additional recurring costs
 
 vars:
-  dbt_cloud_account_id: 5235 # optional, used as metadata
-  dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/" # optional, used as metadata, varies across dbt cloud regions
-  dbt_constraints_enabled: true # pass false to bypass propagating `dbt_constraints` to Snowflake
-  fasttrack_cost_reporting:azure_tags_key: "ProjectName" # azure tag key used for attributing fasttrack azure costs
-  fasttrack_cost_reporting:azure_tags_value: "Fast Track Development" # azure tag value used for attributing fasttrack azure costs
-  fasttrack_cost_reporting:read_roles: "reporter_ft" # comma-separated role prefixes ('' or ',' to disable publish grants)
+  dbt_constraints:
+    # enable/disable pushing model constraints to the target db
+    dbt_constraints_enabled: false
+
+  dbt_snowflake_monitoring:
+    # optional dbt cloud metadata, used to enrich dbt-tagged snowflake monitoring data
+    dbt_cloud_account_id: 5235
+    dbt_cloud_run_url: "https://cloud.getdbt.com/deploy/"
+
+  fasttrack_cost_reporting:
+    # azure tags key/value for fasttrack (costs in other tags will not be taken into account)
+    fasttrack_cost_reporting:azure_tags_key: "ProjectName"
+    fasttrack_cost_reporting:azure_tags_value: "Fast Track Development"
+
+    # comma-separated role prefixes to be granted publish read privileges data, '' or ',' to bypass
+    fasttrack_cost_reporting:read_roles: ","
 ```
 
 see instructions below for more detailed info on package configs:
