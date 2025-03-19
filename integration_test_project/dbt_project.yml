@@ -50,6 +50,3 @@ vars:
     # azure tags key/value for fasttrack (costs in other tags will not be taken into account)
     fasttrack_cost_reporting:azure_tags_key: "ProjectName"
     fasttrack_cost_reporting:azure_tags_value: "Fast Track Development"
-
-    # comma-separated role prefixes to be granted publish read privileges data, '' or ',' to bypass
-    fasttrack_cost_reporting:read_roles: ","
