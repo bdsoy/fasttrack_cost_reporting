@@ -3,4 +3,4 @@ packages:
   
   # remote package:
   # - git: "https://github.com/bdsoy/fasttrack_cost_reporting.git"
-  #   revision: 1.1.0
+  #   revision: 2.0.0
