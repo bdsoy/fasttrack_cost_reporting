@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## dbt-snowflake-monitoring [2.0.0](https://github.com/bdsoy/fasttrack_cost_reporting/releases/tag/2.0.0) - March 19, 2025
+
+### Breaking Changes
+
+- Remove unused project variables
+- Remove off-scope package grants
+
+### Features
+
+- Improved documentation
+- Integration test project
+- Stricter datatypes and tests
+
 ## dbt-snowflake-monitoring [1.1.0](https://github.com/bdsoy/fasttrack_cost_reporting/releases/tag/1.1.0) - March 11, 2025
 
 ### Features

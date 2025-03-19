@@ -26,7 +26,7 @@ add `fasttrack_cost_reporting` to the [packages.yml](https://docs.getdbt.com/doc
 ```yaml
 packages:
   - git: "https://github.com/bdsoy/fasttrack_cost_reporting.git"
-    revision: 1.1.0
+    revision: 2.0.0
 ```
 
 run [`dbt deps`](https://docs.getdbt.com/reference/commands/deps) to install the package
@@ -65,6 +65,10 @@ models:
 
     publish:
       +schema: "publish_cost_reporting" # schema for d_%, f_% models
+      +post-hook:
+        - "grant usage on schema {{ this.database }}.{{ this.schema }} to role [report_role]"
+        - "grant select on {{ this }} to role [report_role]"
+
 
 # specify source configs here if not using the defaults below or overriding them somewhere else
 sources:
