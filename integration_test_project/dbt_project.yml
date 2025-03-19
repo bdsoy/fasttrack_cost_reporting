@@ -5,6 +5,7 @@ profile: "fasttrack_cost_reporting_test" # must exist within $HOME/.dbt/profiles
 
 macro-paths: ["macros"]
 model-paths: ["models"]
+seed-paths: ["seeds"]
 test-paths: ["tests"]
 
 target-path: "target"

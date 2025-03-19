@@ -105,14 +105,14 @@ p.s. for an example package implementation please check the included
 [integration_test_project](https://github.com/bdsoy/fasttrack_cost_reporting/tree/main/integration_test_project)
 
 ## recommended daily jobs
-load additional costs:
+load additional cost references:
 ```sh
-dbt seed --select additional_costs
+dbt seed
 ```
 
 load azure cost data:
 ```sh
-dbt run-operation copy_into_azure_cost_data(*args)
+dbt run-operation copy_into_azure_cost_data --args '{ subscriptionname: [subscription], stagename: [stage] }'
 ```
 
 refresh all package models (inc. run-time tests and extras from `dbt_snowflake_monitoring`) 
@@ -179,14 +179,14 @@ activate virtual env and install dev/test dependencies:
 source .venv/bin/activate && dbt deps && dbt deps --project-dir ./integration_test_project
 ```
 
-refresh dev data (including build-time tests):
+refresh dev data (inc. run-time and build-time tests):
 ```sh
 dbt build [--full-refresh]
 ```
 
-refresh test data (including integration tests):
+refresh test data (inc. integration tests):
 ```sh
-dbt build --project-dir ./integration_test_project
+dbt seed --project-dir ./integration_test_project && dbt build --project-dir ./integration_test_project
 ```
 
 generate and serve docs:
@@ -195,16 +195,12 @@ dbt docs generate && dbt docs serve
 ```
 
 ## future improvements
-- [v2]: add additional costs seed to `integration_test_project`
-- [v2]: move unit tests to `integration_test_project` to improve package usability
-- [v2]: review readme incomplete instructions / TODOs
 - [v2]: update azure devops reference fasttrack project to use pkg v2
-- ~~[v2]: review var nomenclature~~
 - support multiple billing currencies (only USD allowed as Snowflake billing currency for now)
 - extend test coverage of `f_cost_reporting` with mock data (fixtures) for all staging models
 - add singular test over `f_cost_reporting` to ensure sums match across all granularities/platforms
 - add `d_cost_reporting` tests and column documentation
 - customize the dbt Docs package documentation homepage
-- add yaml file for macros and other existing resources yet without descriptions to show on dbt Docs
+- add yaml file for existing resources without descriptions on dbt Docs
 - add github action to compile the package and integration project, generate docs and verify that
 all tests are passing before merging PRs to main

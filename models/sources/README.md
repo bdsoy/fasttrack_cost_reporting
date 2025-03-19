@@ -153,7 +153,7 @@ Fast Track mapping tables used as primary sources (references)
       - name: fasttrack_additional_platform_costs
         config:
           database: platform_references_database # default: {{ target.database }}
-          schema: platform_referemces_schema # default: reference_cost_reporting
+          schema: platform_references_schema # default: reference_cost_reporting
           alias: platform_references_additional_costs # default: fasttrack_additional_platform_costs
           delimiter: ','
           column_types:

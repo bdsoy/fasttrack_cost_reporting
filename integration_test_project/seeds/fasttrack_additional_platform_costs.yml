@@ -1,0 +1,16 @@
+seeds:
+  - name: fasttrack_additional_platform_costs
+    config:
+      schema: reference_cost_reporting
+      alias: fasttrack_additional_platform_costs
+      delimiter: ','
+      column_types:
+        platform: text
+        servicecharge: text
+        servicesubcharge: text
+        billingdatefrom: text
+        billingdateto: text
+        qty: text # a warning will be thrown in case this a numeric type
+        price: text # a warning will be thrown in case this a numeric type
+        currency: text
+        granularity: text # accepted values: daily | weekly | monthly | yearly
