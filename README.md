@@ -117,12 +117,12 @@ dbt run-operation copy_into_azure_cost_data(*args)
 
 refresh all package models (inc. run-time tests and extras from `dbt_snowflake_monitoring`) 
 ```sh
-dbt build
+dbt build --exclude 'test_type:unit'
 ```
 
 refresh only essential models for `fasttrack_cost_reporting` (inc. tests) 
 ```sh
-dbt build +f_cost_reporting
+dbt build +f_cost_reporting --exclude 'test_type:unit'
 ```
 
 ## development setup
