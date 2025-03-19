@@ -96,9 +96,6 @@ vars:
     # azure tags key/value for fasttrack (costs in other tags will not be taken into account)
     fasttrack_cost_reporting:azure_tags_key: "ProjectName"
     fasttrack_cost_reporting:azure_tags_value: "Fast Track Development"
-
-    # comma-separated role prefixes to be granted publish read privileges data, '' or ',' to bypass
-    fasttrack_cost_reporting:read_roles: "reporter_ft" # obs. "_[target.name]" always gets appended
 ```
 
 see instructions below for more detailed info on package configs:
@@ -115,14 +112,18 @@ dbt seed --select additional_costs
 
 load azure cost data:
 ```sh
-dbt run-operation copy_into_azure_cost_data
+dbt run-operation copy_into_azure_cost_data(*args)
 ```
 
-refresh package models (including run-time tests) 
+refresh all package models (inc. run-time tests and extras from `dbt_snowflake_monitoring`) 
 ```sh
 dbt build
 ```
-_**TODO**: incomplete section_
+
+refresh only essential models for `fasttrack_cost_reporting` (inc. tests) 
+```sh
+dbt build +f_cost_reporting
+```
 
 ## development setup
 `$HOME/.dbt/profiles.yml`:
@@ -197,8 +198,6 @@ dbt docs generate && dbt docs serve
 - [v2]: add additional costs seed to `integration_test_project`
 - [v2]: move unit tests to `integration_test_project` to improve package usability
 - [v2]: review readme incomplete instructions / TODOs
-- [v2]: add project variable to allow bypassing adding `_{{ target.name }}` suffixes to read roles
-- [v2]: add access scope controls to non-public internal package resources 
 - [v2]: update azure devops reference fasttrack project to use pkg v2
 - ~~[v2]: review var nomenclature~~
 - support multiple billing currencies (only USD allowed as Snowflake billing currency for now)
