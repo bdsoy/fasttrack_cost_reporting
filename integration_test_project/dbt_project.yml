@@ -36,6 +36,9 @@ models:
 
     publish:
       +schema: "publish_cost_reporting" # schema for d_%, f_% models
+      +post-hook:
+        - grant usage on schema {{ this.database }}.{{ this.schema }} to role reporter_ft_{{ target.name if 'def' not in target.name|lower else 'dev' }}
+        - grant select on {{ this }} to role reporter_ft_{{ target.name if 'def' not in target.name|lower else 'dev' }}
 
 vars:
   dbt_constraints:
