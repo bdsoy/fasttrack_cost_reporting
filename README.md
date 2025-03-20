@@ -8,8 +8,8 @@ standalone dbt package aggregating cost data sources for twoday's Fast Track sol
 - [future improvements](#future-improvements)
 
 ## documentation
-- [dbt Docs page for all package resources](https://get-select.github.io/dbt-snowflake-monitoring/#!/overview)
-- [main lineage](https://bdsoy.github.io/fasttrack_cost_reporting/#!/overview?g_v=1&g_i=%2Bd_cost_reporting_tags%20%2Bf_cost_reporting)
+- [dbt Docs page for all package resources](https://bdsoy.github.io/fasttrack_cost_reporting/#!/overview)
+- [main lineage](https://bdsoy.github.io/fasttrack_cost_reporting/#!/overview?g_v=1&g_i=%2Bpublish.*)
 - [final published fact: `f_cost_reporting`](https://bdsoy.github.io/fasttrack_cost_reporting/#!/model/model.fasttrack_cost_reporting.f_cost_reporting#details)
 
 ## required sources
@@ -31,7 +31,7 @@ packages:
 
 run [`dbt deps`](https://docs.getdbt.com/reference/commands/deps) to install the package
 
-include the following required settings to the proejct
+include the following required settings to the project
 [dbt_project.yml](https://docs.getdbt.com/reference/dbt_project.yml) file:
 ```yaml
 # ensure correct macro precedence, so that e.g. query-tags work properly without side-effects
@@ -119,14 +119,14 @@ load azure cost data:
 dbt run-operation copy_into_azure_cost_data --args '{ subscriptionname: [subscription], stagename: [stage] }'
 ```
 
-refresh all package models (inc. run-time tests and extras from `dbt_snowflake_monitoring`) 
+refresh all models (inc. run-time tests and extras from `dbt_snowflake_monitoring`) 
 ```sh
 dbt build --exclude 'test_type:unit'
 ```
 
-refresh only essential models for `fasttrack_cost_reporting` (inc. tests) 
+refresh only essential models for `fasttrack_cost_reporting` (inc. run-time tests) 
 ```sh
-dbt build +f_cost_reporting --exclude 'test_type:unit'
+dbt build --select '+fasttrack_cost_reporting.publish.*' --exclude 'test_type:unit'
 ```
 
 ## development setup
